@@ -1,16 +1,23 @@
-import os.path,sys
+# coding:utf-8
+
+import os.path
+import sys
 import pypandoc
 
-name=sys.argv[1]
-fmt=sys.argv[2]
-type=sys.argv[3]
+name = sys.argv[1]
+fmt = sys.argv[2]
+type = sys.argv[3]
 
-src=name+'.'+fmt
-des=name+'.'+type
+src = name+'.'+fmt
+des = name+'.'+type
 
-if type in ['docx','doc','html','pdf']:
-    pypandoc.convert_file(src,type,outputfile=des)
+if type in ['docx', 'html']:
+    pypandoc.convert_file(src, type, outputfile=des)
+elif type in ['pdf']:
+    pypandoc.convert_file(src, type, outputfile=des, extra_args=[
+                          '-s', '--pdf-engine=xelatex', '--template=pm-template.latex', '-V', 'CJKmainfont="FZYanSongS-R-GB"'])
 else:
-    pypandoc.convert_file(src,type,outputfile=des,extra_args=['-V ','mainfont="Microsoft YaHei"','--template=pm-template.latex', '--pdf-engine=xelatex'])
+    print("unsupported format!")
+    os._exit(0)
 
 print("success!")
